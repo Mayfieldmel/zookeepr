@@ -5,6 +5,8 @@ const { animals } = require('./data/animals');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+app.use(express.static('public'));
 // parse incoming string or array data
 app.use(express.urlencoded({ extended: true }));
 // parse incoming JSON data
@@ -101,10 +103,15 @@ app.post('/api/animals', (req, res) => {
   if (!validateAnimal(req.body)) {
     res.status(400).send('The animal is not properly formatted.');
   } else {
-      // add animal to json file and animals array in this function
+      // add animal to json file and animals array in this function 
     const animal = createNewAnimal(req.body, animals);
     res.json(animal);
   }
+});
+
+// connecting index.html to the express.js server
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 // set up server port
